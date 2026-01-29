@@ -1,40 +1,68 @@
 package com.checkmate.app.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
-import com.checkmate.app.R
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.checkmate.app.state.MiExitUntilCollapsedState
+import com.checkmate.app.ui.theme.CheckMateTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+val MinToolbarHeight = 96.dp
+val MaxToolbarHeight = 176.dp
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "FrequentlyChangingValue")
 @Composable
-fun MainView(navHostController: NavHostController) {
-    Scaffold(topBar = {
-        TopAppBar(
-            title = { Text(stringResource(R.string.app_name)) },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        )
-    }) { innerPadding ->
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding()),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            NavHostView(navHostController)
-        }
+fun MainView() {
+    val appToolbarHeightRange = with(LocalDensity.current) {
+        MinToolbarHeight.roundToPx()..MaxToolbarHeight.roundToPx()
     }
+    val toolbarState = rememberSaveable(saver = MiExitUntilCollapsedState.Saver) {
+        MiExitUntilCollapsedState(heightRange = appToolbarHeightRange)
+    }
+    val scrollState = rememberScrollState()
+    toolbarState.scrollValue = scrollState.value
 
+//    Scaffold(topBar = {
+//        AnimatedAppBar(
+//            modifier = Modifier.fillMaxSize(),
+//            scrollState = scrollState,
+//            progress = toolbarState.progress
+//        )
+//    }) { innerPadding ->
+//        Surface(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(top = innerPadding.calculateTopPadding()),
+//            color = MaterialTheme.colorScheme.background
+//        ) {
+//            NavHostView(navHostController)
+//        }
+//    }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(), content = {
+            AnimatedAppBar(
+                progress = toolbarState.progress,
+                modifier = Modifier.fillMaxSize(),
+                scrollState = scrollState,
+                columns = 1,
+                list = populateList(),
+            )
+        })
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun MainViewPreview(
+) {
+    CheckMateTheme {
+        MainView()
+    }
 }

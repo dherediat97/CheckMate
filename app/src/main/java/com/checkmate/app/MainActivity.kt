@@ -1,5 +1,6 @@
 package com.checkmate.app
 
+import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
@@ -7,10 +8,11 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.rememberNavController
+import androidx.core.content.ContextCompat
 import com.checkmate.app.receiver.INTENT_ACTION_NFC_READ
 import com.checkmate.app.receiver.getParcelableCompatibility
 import com.checkmate.app.screens.MainView
@@ -25,13 +27,13 @@ class MainActivity : ComponentActivity() {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
 
         enableEdgeToEdge()
+        setStatusBarGradiant()
         setContent {
             CheckMateTheme {
-                MainView(navHostController = rememberNavController())
+                MainView()
             }
         }
     }
-
 
 
     private fun enableNfcForegroundDispatch() {
@@ -63,6 +65,14 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    fun Activity.setStatusBarGradiant() {
+        val background = ContextCompat.getDrawable(this, R.drawable.gradient_background)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(this, android.R.color.transparent)
+        window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
+        window.setBackgroundDrawable(background)
     }
 
 

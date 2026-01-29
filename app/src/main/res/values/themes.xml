@@ -2,4 +2,9 @@
 <resources>
 
     <style name="Theme.CheckMate" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.CheckMate.NoActionBar" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
