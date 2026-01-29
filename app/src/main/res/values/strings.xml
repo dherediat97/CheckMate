@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CheckMateApp</string>
+    <string name="scan_hint_nfc_card">Acerca al sensor NFC de tu teléfono una tarjeta NFC válida</string>
+</resources>
